@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../../components/manager/Sidebar";
+import Navbar from "../../components/manager/Navbar";
 
 export default function NotificationsPage() {
   const roles = ["All", "Chef", "Cashier", "Waiter", "Manager"];

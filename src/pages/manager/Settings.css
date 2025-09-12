@@ -1,0 +1,83 @@
+/* src/pages/Settings.css */
+.settings-page {
+  min-height: 100vh;
+  background: #FFF7F0;
+  transition: 0.3s;
+  color: #3B3B3B;
+}
+
+.settings-page.dark {
+  background: #3B3B3B;
+  color: #FFF7F0;
+}
+
+.settings-content {
+  margin-left: 240px;
+  padding: 2rem;
+}
+
+.dark-mode-toggle {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.settings-section {
+  background: #BFEAE6;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transition: 0.3s;
+}
+
+.settings-page.dark .settings-section {
+  background: #FFF7F0;
+  color: #3B3B3B;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1rem;
+  gap: 0.5rem;
+}
+
+.expand-icon {
+  margin-left: auto;
+}
+
+.section-body {
+  padding: 1rem;
+  border-top: 1px solid #3B3B3B;
+}
+
+input, select {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+button {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  margin-top: 0.5rem;
+  transition: 0.3s;
+}
+
+.preview-img {
+  width: 150px;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}

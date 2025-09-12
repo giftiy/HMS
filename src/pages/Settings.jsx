@@ -5,7 +5,7 @@ import Sidebar from "../components/Sidebar";
 import { 
   FaUser, FaHotel, FaLock, FaBed, FaPalette, FaBell, FaCreditCard, FaGlobe 
 } from "react-icons/fa";
-import "./Settings.css"; // Separate CSS for professional styling
+import "./Settings.css"; 
 
 export default function Settings() {
   const [darkMode, setDarkMode] = useState(false);
@@ -129,12 +129,7 @@ export default function Settings() {
         </div>
 
         {/* Sections */}
-        <SettingsSection
-          title="General Profile"
-          icon={<FaUser />}
-          expanded={expanded === "profile"}
-          toggle={() => toggleExpand("profile")}
-        >
+        <SettingsSection title="General Profile" icon={<FaUser />} expanded={expanded === "profile"} toggle={() => toggleExpand("profile")}>
           <form onSubmit={(e) => handleSave(e, "Profile")}>
             <input type="text" name="fullName" value={profile.fullName} placeholder="Full Name" onChange={(e) => handleChange(e, "profile")} />
             <input type="email" name="email" value={profile.email} placeholder="Email" onChange={(e) => handleChange(e, "profile")} />
@@ -151,28 +146,22 @@ export default function Settings() {
           </form>
         </SettingsSection>
 
-        <SettingsSection
-          title="Hotel Information"
-          icon={<FaHotel />}
-          expanded={expanded === "hotelInfo"}
-          toggle={() => toggleExpand("hotelInfo")}
-        >
+        <SettingsSection title="Hotel Information" icon={<FaHotel />} expanded={expanded === "hotelInfo"} toggle={() => toggleExpand("hotelInfo")}>
           <form onSubmit={(e) => handleSave(e, "Hotel Information")}>
             <input type="text" name="hotelName" value={hotelInfo.hotelName} placeholder="Hotel Name" onChange={(e) => handleChange(e, "hotelInfo")} />
             <input type="file" name="logo" accept="image/*" onChange={(e) => handleChange(e, "hotelInfo", true)} />
             <input type="text" name="address" value={hotelInfo.address} placeholder="Address" onChange={(e) => handleChange(e, "hotelInfo")} />
             <input type="text" name="contact" value={hotelInfo.contact} placeholder="Contact Number" onChange={(e) => handleChange(e, "hotelInfo")} />
             <input type="email" name="email" value={hotelInfo.email} placeholder="Email" onChange={(e) => handleChange(e, "hotelInfo")} />
+            <input type="time" name="checkIn" value={hotelInfo.checkIn} onChange={(e) => handleChange(e, "hotelInfo")} />
+            <input type="time" name="checkOut" value={hotelInfo.checkOut} onChange={(e) => handleChange(e, "hotelInfo")} />
+            <input type="text" name="currency" value={hotelInfo.currency} onChange={(e) => handleChange(e, "hotelInfo")} />
+            <input type="text" name="language" value={hotelInfo.language} onChange={(e) => handleChange(e, "hotelInfo")} />
             <button type="submit">Save Hotel Info</button>
           </form>
         </SettingsSection>
 
-        <SettingsSection
-          title="Account & Security"
-          icon={<FaLock />}
-          expanded={expanded === "account"}
-          toggle={() => toggleExpand("account")}
-        >
+        <SettingsSection title="Account & Security" icon={<FaLock />} expanded={expanded === "account"} toggle={() => toggleExpand("account")}>
           <form onSubmit={(e) => handleSave(e, "Account")}>
             <input type="password" name="currentPassword" value={account.currentPassword} placeholder="Current Password" onChange={(e) => handleChange(e, "account")} />
             <input type="password" name="newPassword" value={account.newPassword} placeholder="New Password" onChange={(e) => handleChange(e, "account")} />
@@ -185,8 +174,64 @@ export default function Settings() {
           </form>
         </SettingsSection>
 
-        {/* Additional sections (Room & Services, Display, Notifications, Payment, Social/Marketing) */}
-        {/* Use same SettingsSection component, form fields, icons */}
+        <SettingsSection title="Room & Services" icon={<FaBed />} expanded={expanded === "rooms"} toggle={() => toggleExpand("rooms")}>
+          <form onSubmit={(e) => handleSave(e, "Rooms & Services")}>
+            <label>Default Room Types (comma separated)</label>
+            <input type="text" name="defaultTypes" value={rooms.defaultTypes.join(",")} onChange={(e) => setRooms({ ...rooms, defaultTypes: e.target.value.split(",") })} />
+            <label>Amenities</label>
+            <label><input type="checkbox" name="wifi" checked={rooms.amenities.wifi} onChange={(e) => setRooms({ ...rooms, amenities: { ...rooms.amenities, wifi: e.target.checked } })} /> Wi-Fi</label>
+            <label><input type="checkbox" name="pool" checked={rooms.amenities.pool} onChange={(e) => setRooms({ ...rooms, amenities: { ...rooms.amenities, pool: e.target.checked } })} /> Pool</label>
+            <label><input type="checkbox" name="gym" checked={rooms.amenities.gym} onChange={(e) => setRooms({ ...rooms, amenities: { ...rooms.amenities, gym: e.target.checked } })} /> Gym</label>
+            <label><input type="checkbox" name="breakfast" checked={rooms.amenities.breakfast} onChange={(e) => setRooms({ ...rooms, amenities: { ...rooms.amenities, breakfast: e.target.checked } })} /> Breakfast</label>
+            <input type="text" name="serviceCharges" placeholder="Service Charges" value={rooms.serviceCharges} onChange={(e) => handleChange(e, "rooms")} />
+            <button type="submit">Save Rooms</button>
+          </form>
+        </SettingsSection>
+
+        <SettingsSection title="Display & Theme" icon={<FaPalette />} expanded={expanded === "display"} toggle={() => toggleExpand("display")}>
+          <form onSubmit={(e) => handleSave(e, "Display & Theme")}>
+            <label>Primary Color</label>
+            <input type="color" name="primaryColor" value={display.primaryColor} onChange={(e) => handleChange(e, "display")} />
+            <label>Secondary Color</label>
+            <input type="color" name="secondaryColor" value={display.secondaryColor} onChange={(e) => handleChange(e, "display")} />
+            <label>Layout</label>
+            <select name="layout" value={display.layout} onChange={(e) => handleChange(e, "display")}>
+              <option value="default">Default</option>
+              <option value="compact">Compact</option>
+              <option value="modern">Modern</option>
+            </select>
+            <button type="submit">Save Display</button>
+          </form>
+        </SettingsSection>
+
+        <SettingsSection title="Notifications" icon={<FaBell />} expanded={expanded === "notifications"} toggle={() => toggleExpand("notifications")}>
+          <form onSubmit={(e) => handleSave(e, "Notifications")}>
+            <label><input type="checkbox" name="email" checked={notifications.email} onChange={(e) => handleChange(e, "notifications")} /> Email Alerts</label>
+            <label><input type="checkbox" name="sms" checked={notifications.sms} onChange={(e) => handleChange(e, "notifications")} /> SMS Alerts</label>
+            <label><input type="checkbox" name="bookingAlerts" checked={notifications.bookingAlerts} onChange={(e) => handleChange(e, "notifications")} /> Booking Alerts</label>
+            <button type="submit">Save Notifications</button>
+          </form>
+        </SettingsSection>
+
+        <SettingsSection title="Payment & Billing" icon={<FaCreditCard />} expanded={expanded === "payment"} toggle={() => toggleExpand("payment")}>
+          <form onSubmit={(e) => handleSave(e, "Payment & Billing")}>
+            <input type="text" name="defaultMethod" value={payment.defaultMethod} placeholder="Default Payment Method" onChange={(e) => handleChange(e, "payment")} />
+            <input type="text" name="invoiceTemplate" value={payment.invoiceTemplate} placeholder="Invoice Template" onChange={(e) => handleChange(e, "payment")} />
+            <input type="text" name="tax" value={payment.tax} placeholder="Tax (%)" onChange={(e) => handleChange(e, "payment")} />
+            <button type="submit">Save Payment</button>
+          </form>
+        </SettingsSection>
+
+        <SettingsSection title="Social & Marketing" icon={<FaGlobe />} expanded={expanded === "social"} toggle={() => toggleExpand("social")}>
+          <form onSubmit={(e) => handleSave(e, "Social & Marketing")}>
+            <input type="text" name="website" placeholder="Website" value={social.website} onChange={(e) => handleChange(e, "social")} />
+            <input type="text" name="facebook" placeholder="Facebook" value={social.facebook} onChange={(e) => handleChange(e, "social")} />
+            <input type="text" name="instagram" placeholder="Instagram" value={social.instagram} onChange={(e) => handleChange(e, "social")} />
+            <input type="text" name="twitter" placeholder="Twitter" value={social.twitter} onChange={(e) => handleChange(e, "social")} />
+            <input type="file" name="promoBanner" accept="image/*" onChange={(e) => handleChange(e, "social", true)} />
+            <button type="submit">Save Social</button>
+          </form>
+        </SettingsSection>
       </div>
     </div>
   );
