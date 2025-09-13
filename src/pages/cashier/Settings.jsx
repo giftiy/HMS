@@ -1,11 +1,11 @@
-// src/pages/waiter/WaiterSettings.jsx
+// src/pages/cashier/Settings.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../../components/waiter/Sidebar";
-import Navbar from "../../components/waiter/Navbar";
+import Sidebar from "../../components/cashier/Sidebar";
+import Navbar from "../../components/cashier/Navbar";
 import { FaCamera, FaSignOutAlt } from "react-icons/fa";
 
-export default function WaiterSettings({ role = "Waiter" }) {
+export default function Settings({ role = "Cashier" }) {
   const navigate = useNavigate();
 
   // Load profile data from localStorage

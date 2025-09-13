@@ -1,198 +1,140 @@
+// src/pages/cashier/NotificationList.jsx
 import React, { useState } from "react";
-import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
+import { FaEnvelopeOpen, FaEnvelope, FaTrash } from "react-icons/fa";
 
-export default function NotificationsPage() {
-  const roles = ["All", "Chef", "Cashier", "Waiter", "Manager"];
-  const [activeRole, setActiveRole] = useState("All");
-
-  // Sample notifications (frontend-only)
+export default function NotificationList() {
   const [notifications, setNotifications] = useState([
-    { id: 1, message: "New order received", role: "Chef", table: "3", foodType: "Pizza", payment: "Cash", readFlag: false, time: "10:30 AM" },
-    { id: 2, message: "Payment received", role: "Cashier", table: "5", foodType: "-", payment: "Card", readFlag: true, time: "11:00 AM" },
-    { id: 3, message: "Order served", role: "Waiter", table: "2", foodType: "Burger", payment: "Cash", readFlag: false, time: "11:15 AM" },
+    { id: 1, message: "New order received at Table 1", category: "Order", read: false, time: "09:30 AM", senderName: "Alice", role: "Waiter" },
+    { id: 2, message: "Payment pending for Table 2", category: "Payment", read: false, time: "10:15 AM", senderName: "Bob", role: "Waiter" },
+    { id: 3, message: "Daily revenue report ready", category: "Report", read: true, time: "11:00 AM", senderName: "Admin", role: "Manager" },
   ]);
 
-  const [showDetail, setShowDetail] = useState(false);
-  const [selectedNotif, setSelectedNotif] = useState(null);
+  const [selectedNotification, setSelectedNotification] = useState(null);
+  const categories = ["All", "Order", "Payment", "Report"];
+  const [filter, setFilter] = useState("All");
 
-  // ===================== Mark as Read =====================
-  const handleMarkAsRead = (id) => {
-    setNotifications(prev =>
-      prev.map(n => n.id === id ? { ...n, readFlag: true } : n)
-    );
-  };
-
-  // ===================== Delete Notification =====================
-  const handleDeleteNotification = (id) => {
-    if (window.confirm("Are you sure you want to delete this notification?")) {
-      setNotifications(prev => prev.filter(n => n.id !== id));
-      if (selectedNotif?.id === id) setShowDetail(false);
-    }
-  };
-
-  // ===================== View Notification =====================
-  const viewNotification = (notif) => {
-    setSelectedNotif(notif);
-    setShowDetail(true);
-    if (!notif.readFlag) handleMarkAsRead(notif.id);
-  };
-
-  const filteredNotifications = activeRole === "All"
+  const filteredNotifications = filter === "All"
     ? notifications
-    : notifications.filter(n => n.role === activeRole);
+    : notifications.filter(n => n.category === filter);
+
+  const markRead = (id) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    const notif = notifications.find(n => n.id === id);
+    setSelectedNotification(notif);
+  };
+
+  const deleteNotification = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+    if (selectedNotification?.id === id) setSelectedNotification(null);
+  };
+
+  const styles = {
+    container: { display: "flex", flexDirection: "column", minHeight: "100vh", background: "#f4f6f9", fontFamily: "Arial, sans-serif" },
+    navbarWrapper: { height: "60px", flexShrink: 0 },
+    bodyWrapper: { display: "flex", flex: 1 },
+    sidebarWrapper: { width: "220px" },
+    mainPanel: { flex: 1, display: "flex", padding: "1rem", gap: "1rem", overflow: "hidden" },
+    notificationList: { width: "350px", background: "#fff", borderRadius: "10px", padding: "1rem", overflowY: "auto", boxShadow: "0 4px 12px rgba(0,0,0,0.05)" },
+    notificationItem: (read) => ({
+      padding: "12px",
+      marginBottom: "8px",
+      borderRadius: "8px",
+      cursor: "pointer",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      background: read ? "#f9f9f9" : "#e6f0ff",
+      transition: "background 0.2s, transform 0.2s",
+      borderLeft: read ? "4px solid transparent" : "4px solid #1976D2",
+    }),
+    detailPanel: { flex: 1, padding: "1.5rem", background: "#fff", borderRadius: "10px", boxShadow: "0 4px 12px rgba(0,0,0,0.05)" },
+    categoryBar: { display: "flex", gap: "0.5rem", marginBottom: "1rem", flexWrap: "wrap" },
+    categoryBtn: (active) => ({
+      padding: "6px 14px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer",
+      background: active ? "#0086ba" : "#e0e0e0",
+      color: active ? "#fff" : "#1e2a38",
+      fontWeight: 600,
+      fontSize: "0.85rem",
+      transition: "0.2s",
+    }),
+    timeText: { fontSize: "0.75rem", color: "#555", marginTop: "2px" },
+    noNotification: { color: "#888", fontStyle: "italic", textAlign: "center", marginTop: "1rem" },
+    senderInfo: { fontSize: "0.75rem", color: "#1976D2", fontStyle: "italic", marginTop: "2px" },
+  };
 
   return (
-    <div>
-      <Navbar />
-      <Sidebar />
-      <main style={{ marginLeft: "220px", padding: "2rem", paddingTop: "20px", background: "#f4f6f9", minHeight: "100vh" }}>
-        <h2 style={{ marginBottom: "2rem", textAlign: "center", fontSize: "2rem", fontWeight: "700", color: "#3B3B3B" }}>Notifications</h2>
+    <div style={styles.container}>
+      {/* Navbar full width */}
+      <div style={styles.navbarWrapper}>
+        <Navbar />
+      </div>
 
-        {/* Role Tabs */}
-        <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
-          {roles.map(role => (
-            <button
-              key={role}
-              onClick={() => setActiveRole(role)}
-              style={{
-                padding: "0.5rem 1rem",
-                borderRadius: "20px",
-                border: activeRole === role ? "2px solid #2196F3" : "2px solid #ddd",
-                backgroundColor: activeRole === role ? "#2196F3" : "#fff",
-                color: activeRole === role ? "#fff" : "#333",
-                fontWeight: activeRole === role ? "600" : "500",
-                cursor: "pointer",
-                transition: "0.3s"
-              }}
-            >
-              {role}
-            </button>
-          ))}
-        </div>
+      {/* Body: Sidebar + Main content */}
+      <div style={styles.bodyWrapper}>
+        {/* Sidebar */}
+        <div style={styles.sidebarWrapper}><Sidebar /></div>
 
-        {filteredNotifications.length === 0 ? (
-          <p style={{ textAlign: "center", color: "#777" }}>No notifications in this category</p>
-        ) : (
-          <ul style={{ listStyle: "none", padding: 0, maxWidth: "800px", margin: "0 auto" }}>
-            {filteredNotifications.map(notif => (
-              <li
-                key={notif.id}
-                style={{
-                  backgroundColor: !notif.readFlag ? "#E3F2FD" : "#fff",
-                  border: "1px solid #ddd",
-                  padding: "1rem 1.2rem",
-                  marginBottom: "0.8rem",
-                  borderRadius: "12px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-                  cursor: "pointer",
-                  transition: "transform 0.2s, box-shadow 0.2s",
-                }}
-                onClick={() => viewNotification(notif)}
-                onMouseOver={e => {
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.12)";
-                }}
-                onMouseOut={e => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
-                }}
-              >
-                <div style={{ fontSize: "1rem", color: "#333" }}>
-                  <strong>{notif.role}</strong>: {notif.message}
-                </div>
-                <div style={{ display: "flex", gap: "0.5rem" }}>
-                  {!notif.readFlag && (
-                    <span style={{
-                      padding: "0.3rem 0.6rem",
-                      backgroundColor: "#2196F3",
-                      color: "#fff",
-                      borderRadius: "8px",
-                      fontSize: "0.8rem",
-                      fontWeight: "600"
-                    }}>
-                      Unread
-                    </span>
-                  )}
-                  <button
-                    onClick={e => { e.stopPropagation(); handleDeleteNotification(notif.id); }}
-                    style={{
-                      padding: "0.3rem 0.6rem",
-                      backgroundColor: "#FF4C4C",
-                      color: "#fff",
-                      border: "none",
-                      borderRadius: "6px",
-                      fontSize: "0.8rem",
-                      cursor: "pointer"
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {/* Notification Detail Modal */}
-        {showDetail && selectedNotif && (
-          <div style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0,0,0,0.6)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 100,
-            padding: "1rem"
-          }}>
-            <div style={{
-              background: "#fff",
-              padding: "2rem",
-              borderRadius: "15px",
-              width: "100%",
-              maxWidth: "450px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.2)"
-            }}>
-              <h3 style={{ textAlign: "center", fontSize: "1.5rem", color: "#333", marginBottom: "1rem" }}>
-                Notification Details
-              </h3>
-              <p><strong>Message:</strong> {selectedNotif.message}</p>
-              <p><strong>Role:</strong> {selectedNotif.role}</p>
-              <p><strong>Table:</strong> {selectedNotif.table}</p>
-              <p><strong>Food Type:</strong> {selectedNotif.foodType}</p>
-              <p><strong>Payment:</strong> {selectedNotif.payment}</p>
-              <p><strong>Time:</strong> {selectedNotif.time}</p>
-              <button
-                onClick={() => setShowDetail(false)}
-                style={{
-                  padding: "0.5rem 1.2rem",
-                  backgroundColor: "#2196F3",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "10px",
-                  cursor: "pointer",
-                  alignSelf: "flex-end",
-                  fontWeight: "600"
-                }}
-                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#1976D2")}
-                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#2196F3")}
-              >
-                Close
-              </button>
+        {/* Main Panel */}
+        <div style={styles.mainPanel}>
+          {/* Notification List */}
+          <div style={styles.notificationList}>
+            {/* Category Filter */}
+            <div style={styles.categoryBar}>
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setFilter(cat)}
+                  style={styles.categoryBtn(filter === cat)}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
+
+            {/* Notifications */}
+            {filteredNotifications.length === 0 && <p style={styles.noNotification}>No notifications available</p>}
+            {filteredNotifications.map(n => (
+              <div
+                key={n.id}
+                style={styles.notificationItem(n.read)}
+                onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
+                onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                onClick={() => markRead(n.id)}
+              >
+                <div style={{ flex: 1 }}>
+                  <div>{n.message}</div>
+                  <div style={styles.senderInfo}>{n.senderName} ({n.role})</div>
+                  <div style={styles.timeText}>{n.time}</div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  {n.read ? <FaEnvelopeOpen color="#1976D2" /> : <FaEnvelope color="#1976D2" />}
+                  <FaTrash style={{ color: "#FF4C4C", cursor: "pointer" }} onClick={() => deleteNotification(n.id)} />
+                </div>
+              </div>
+            ))}
           </div>
-        )}
-      </main>
+
+          {/* Notification Detail */}
+          <div style={styles.detailPanel}>
+            {selectedNotification ? (
+              <>
+                <h3 style={{ fontWeight: 700, marginBottom: "0.5rem" }}>{selectedNotification.category} Notification</h3>
+                <p style={{ marginBottom: "0.5rem" }}>{selectedNotification.message}</p>
+                <p style={{ marginBottom: "0.5rem", fontStyle: "italic" }}>Status: {selectedNotification.read ? "Read" : "Unread"}</p>
+                <p style={{ marginBottom: "0.5rem", fontStyle: "italic" }}>Time: {selectedNotification.time}</p>
+                <p style={{ marginBottom: "0.5rem", fontStyle: "italic", color: "#1976D2" }}>From: {selectedNotification.senderName} ({selectedNotification.role})</p>
+              </>
+            ) : (
+              <p style={{ ...styles.noNotification, marginTop: "2rem" }}>Select a notification to view details</p>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

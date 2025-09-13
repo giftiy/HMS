@@ -1,9 +1,9 @@
-// src/components/admin/AdminNavbar.jsx
+// src/components/Navbar.jsx
 import React, { useState } from "react";
 import { FaBell, FaSignOutAlt, FaCamera } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-export default function AdminNavbar() {
+export default function Navbar() {
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
 
@@ -30,7 +30,7 @@ export default function AdminNavbar() {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/admin/login"); // Admin login route
+    navigate("/login");
   };
 
   const handleChange = (field, value) => saveToStorage({ ...adminData, [field]: value });
@@ -67,14 +67,14 @@ export default function AdminNavbar() {
         position: "sticky",
         top: 0,
         zIndex: 1000,
-        marginLeft: "250px", // Admin sidebar width
+        marginLeft: "220px",
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       }}
     >
       {/* Notifications */}
       <div
         style={{ position: "relative", cursor: "pointer", marginRight: "1.5rem" }}
-        onClick={() => alert("Navigate to admin notifications page")}
+        onClick={() => alert("Navigate to notifications page")}
       >
         <FaBell size={22} />
         {unreadCount > 0 && (
@@ -97,7 +97,7 @@ export default function AdminNavbar() {
         )}
       </div>
 
-      {/* Profile Dropdown */}
+      {/* Profile */}
       <div style={{ position: "relative" }}>
         <img
           src={adminData.photo || "/default-avatar.png"}

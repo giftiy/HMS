@@ -58,7 +58,10 @@ export default function WaiterProduct({ productsData = sampleProducts }) {
   };
 
   const removeFromOrder = (id) => setOrder(order.filter((o) => o.id !== id));
-  const editQuantity = (id, qty) => { if (qty < 1) return; setOrder(order.map((o) => (o.id === id ? { ...o, quantity: qty } : o))); };
+  const editQuantity = (id, qty) => {
+    if (qty < 1) return;
+    setOrder(order.map((o) => (o.id === id ? { ...o, quantity: qty } : o)));
+  };
   const totalPrice = order.reduce((sum, o) => sum + o.price * o.quantity, 0);
 
   const submitOrder = () => {
@@ -73,18 +76,10 @@ export default function WaiterProduct({ productsData = sampleProducts }) {
   const styles = {
     container: { display: "flex", minHeight: "100vh", background: "#f4f6f9" },
     sidebarWrapper: { width: sidebarWidth, minHeight: "100vh", position: "fixed", top: 0, left: 0 },
-    contentWrapper: { marginLeft: sidebarWidth, flex: 1, display: "flex", flexDirection: "column" },
-    navbarWrapper: {
-      position: "fixed",
-      top: 0,
-      left: sidebarWidth,
-      right: 0,
-      zIndex: 900,
-      background: "#f4f6f9",
-      borderBottom: "1px solid #e0e0e0",
-    },
-    mainPanel: { display: "flex", flex: 1, padding: "1rem 1.5rem 1.5rem 1.5rem", marginTop: "60px", gap: "1.5rem", overflowX: "auto" },
-    productsPanel: { flex: 2, background: "#f4f6f9", borderRadius: 0, boxShadow: "none", padding: 0 },
+    bodyWrapper: { display: "flex", flex: 1, marginLeft: sidebarWidth, flexDirection: "column" },
+    navbarWrapper: { height: "60px", flexShrink: 0, marginBottom: "1rem" },
+    mainPanel: { display: "flex", flex: 1, padding: "1rem", gap: "1.5rem", overflowX: "auto" },
+    productsPanel: { flex: 2 },
     categoryBar: { display: "flex", gap: "0.5rem", marginBottom: "1rem", flexWrap: "wrap" },
     categoryBtn: (active) => ({
       padding: "6px 12px",
@@ -100,7 +95,7 @@ export default function WaiterProduct({ productsData = sampleProducts }) {
     productCard: { background: "#fff", padding: "1rem", borderRadius: "8px", textAlign: "center", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", cursor: "pointer" },
     productImage: { width: "100%", height: "120px", objectFit: "cover", borderRadius: "6px", marginBottom: "0.5rem" },
     addSelectedBtn: { padding: "6px 12px", background: "#ff9800", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", marginBottom: "1rem", fontWeight: 600 },
-    orderPanel: { flex: 1, background: "#f4f6f9", borderRadius: 0, boxShadow: "none", padding: "0.5rem", minWidth: "300px", display: "flex", flexDirection: "column" },
+    orderPanel: { flex: 1, background: "#fff", borderRadius: "8px", padding: "1rem", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", minWidth: "300px", display: "flex", flexDirection: "column" },
     tableSelect: { marginBottom: "1rem", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" },
     table: { width: "100%", borderCollapse: "collapse" },
     th: { textAlign: "left", borderBottom: "1px solid #ddd", padding: "6px" },
@@ -113,13 +108,25 @@ export default function WaiterProduct({ productsData = sampleProducts }) {
 
   return (
     <div style={styles.container}>
+      {/* Sidebar */}
       <div style={styles.sidebarWrapper}><Sidebar /></div>
-      <div style={styles.contentWrapper}>
+
+      {/* Body: Sidebar + Navbar + Content */}
+      <div style={styles.bodyWrapper}>
+        {/* Navbar */}
         <div style={styles.navbarWrapper}><Navbar /></div>
+
+        {/* Main Content */}
         <div style={styles.mainPanel}>
-          {/* Products */}
+          {/* Products Section */}
           <div style={styles.productsPanel}>
-            <input type="text" placeholder="Search products..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ padding: "8px", marginBottom: "1rem", borderRadius: "6px", border: "1px solid #ccc", width: "100%" }} />
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{ padding: "8px", marginBottom: "1rem", borderRadius: "6px", border: "1px solid #ccc", width: "100%" }}
+            />
             <div style={styles.categoryBar}>
               {categories.map((cat) => (
                 <button key={cat} onClick={() => setCategory(cat)} style={styles.categoryBtn(category === cat)}>{cat}</button>
@@ -128,18 +135,22 @@ export default function WaiterProduct({ productsData = sampleProducts }) {
             <button style={styles.addSelectedBtn} onClick={addSelectedToOrder}>Add Selected to Order</button>
             <div style={styles.productsGrid}>
               {filteredProducts.map((p) => (
-                <div key={p.id} style={{ ...styles.productCard, border: selectedProducts.includes(p.id) ? "2px solid #0086ba" : "2px solid transparent" }} onClick={() => toggleSelect(p)}>
+                <div
+                  key={p.id}
+                  style={{ ...styles.productCard, border: selectedProducts.includes(p.id) ? "2px solid #0086ba" : "2px solid transparent" }}
+                  onClick={() => toggleSelect(p)}
+                >
                   <img src={p.image} alt={p.name} style={styles.productImage} />
                   <h4>{p.name}</h4>
                   <p><strong>{p.category}</strong></p>
-                  <p>${p.price.toFixed(2)}</p>
+                  <p>BIRR {p.price.toFixed(2)}</p>
                   <p style={{ fontSize: "0.85rem", color: "#555" }}>{p.description}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Current Order */}
+          {/* Current Order Section */}
           <div style={styles.orderPanel}>
             <h3>Current Order</h3>
             <select style={styles.tableSelect} value={selectedTable} onChange={(e) => setSelectedTable(e.target.value)}>
@@ -162,14 +173,22 @@ export default function WaiterProduct({ productsData = sampleProducts }) {
                     {order.map((o) => (
                       <tr key={o.id}>
                         <td style={styles.td}>{o.name}</td>
-                        <td style={styles.td}><input type="number" min="1" style={styles.qtyInput} value={o.quantity} onChange={(e) => editQuantity(o.id, parseInt(e.target.value))} /></td>
-                        <td style={styles.td}>${(o.price * o.quantity).toFixed(2)}</td>
+                        <td style={styles.td}>
+                          <input
+                            type="number"
+                            min="1"
+                            style={styles.qtyInput}
+                            value={o.quantity}
+                            onChange={(e) => editQuantity(o.id, parseInt(e.target.value))}
+                          />
+                        </td>
+                        <td style={styles.td}>BIRR {(o.price * o.quantity).toFixed(2)}</td>
                         <td style={styles.td}><button style={styles.btnRemove} onClick={() => removeFromOrder(o.id)}>Remove</button></td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-                <div style={styles.totalPrice}>Total: ${totalPrice.toFixed(2)}</div>
+                <div style={styles.totalPrice}>Total: BIRR {totalPrice.toFixed(2)}</div>
                 <button style={styles.submitBtn} onClick={submitOrder}>Submit Order</button>
               </>
             )}

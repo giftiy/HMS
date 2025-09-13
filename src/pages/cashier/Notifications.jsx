@@ -1,7 +1,7 @@
 // src/pages/cashier/NotificationList.jsx
 import React, { useState } from "react";
-import Sidebar from "../../components/waiter/Sidebar";
-import Navbar from "../../components/waiter/Navbar";
+import Sidebar from "../../components/cashier/Sidebar";
+import Navbar from "../../components/cashier/Navbar";
 import { FaEnvelopeOpen, FaEnvelope, FaTrash } from "react-icons/fa";
 
 export default function NotificationList() {
