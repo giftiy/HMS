@@ -14,7 +14,7 @@ export default function LoginPage() {
   const dummyUsers = [
     { email: "admin@soreti.com", password: "Admin@123", role: "ADMIN" },
     { email: "manager@soreti.com", password: "Manager@123", role: "MANAGER" },
-    { email: "chef@soreti.com", password: "Chef@123", role: "CHEFF_FOOD" },
+    { email: "chef@soreti.com", password: "Chef@123", role: "CHEFF" },
     { email: "waiter@soreti.com", password: "Waiter@123", role: "WAITER" },
     { email: "cashier@soreti.com", password: "Cashier@123", role: "CASHIER" },
   ];
@@ -68,9 +68,8 @@ export default function LoginPage() {
           case "MANAGER":
             navigate("/manager/dashboard");
             break;
-          case "CHEFF_FOOD":
-          case "CHEFF_DRINK":
-          case "CHEFF_SNACK":
+          case "CHEFF":
+        
             navigate("/chef/dashboard");
             break;
           case "WAITER":
@@ -91,7 +90,7 @@ export default function LoginPage() {
   return (
     <div className="login-page">
       <form className="login-form" onSubmit={handleLogin}>
-        <h2>Soreti Admin Login</h2>
+        <h2>Welcome Soreti Hotel</h2>
 
         {error && <p className="error">{error}</p>}
 
