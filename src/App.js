@@ -1,4 +1,4 @@
-// App.jsx
+// src/App.jsx
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -16,6 +16,13 @@ import ManagerSettings from "./pages/manager/Settings";
 import ManagerNotifications from "./pages/manager/Notifications";
 import ProductManager from "./pages/manager/ProductManager";
 import ManagerReports from "./pages/manager/Reports";
+
+// Waiter Pages
+import WaiterDashboard from "./pages/waiter/WaiterDashboard";
+import WaiterOrders from "./pages/waiter/WaiterOrders";
+import WaiterProducts from "./pages/waiter/WaiterProducts";
+import WaiterProfile from "./pages/waiter/WaiterProfile";
+import WaiterNotifications from "./pages/waiter/NotificationList";
 
 function App() {
   return (
@@ -39,6 +46,16 @@ function App() {
       <Route path="/manager/notifications" element={<ManagerNotifications />} />
       <Route path="/manager/products" element={<ProductManager />} />
       <Route path="/manager/reports" element={<ManagerReports />} />
+
+      {/* Waiter Routes */}
+      <Route path="/waiter/dashboard" element={<WaiterDashboard />} />
+      <Route path="/waiter/orders" element={<WaiterOrders />} />
+      <Route path="/waiter/products" element={<WaiterProducts />} />
+      <Route path="/waiter/profile" element={<WaiterProfile />} />
+      <Route path="/waiter/notifications" element={<WaiterNotifications />} />
+
+      {/* Fallback for unknown routes */}
+      <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );
 }
